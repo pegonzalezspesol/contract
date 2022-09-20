@@ -8,7 +8,7 @@ from odoo import fields, models
 class ContractContract(models.Model):
     _inherit = "contract.contract"
 
-    free_invoice_date = fields.Boolean(string="Free Invoice Date")
+    free_invoice_date = fields.Boolean()
 
     def _prepare_invoice(self, date_invoice, journal=None):
         invoice_vals, move_form = super(ContractContract, self)._prepare_invoice(

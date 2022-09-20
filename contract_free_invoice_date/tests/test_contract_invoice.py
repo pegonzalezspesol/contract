@@ -2,10 +2,10 @@
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestInvoiceContract(SavepointCase):
+class TestInvoiceContract(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestInvoiceContract, cls).setUpClass()
