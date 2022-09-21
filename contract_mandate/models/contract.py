@@ -16,7 +16,8 @@ class ContractContract(models.Model):
         index=True,
     )
     mandate_required = fields.Boolean(
-        related="payment_mode_id.payment_method_id.mandate_required", readonly=True
+        related="payment_mode_id.payment_method_id.mandate_required",
+        readonly=True,
     )
     commercial_partner_id = fields.Many2one(
         related="partner_id.commercial_partner_id",
@@ -39,7 +40,11 @@ class ContractContract(models.Model):
         elif self.payment_mode_id.payment_method_id.mandate_required:
             mandate = self.env["account.banking.mandate"].search(
                 [
-                    ("partner_id", "=", self.partner_id.commercial_partner_id.id),
+                    (
+                        "partner_id",
+                        "=",
+                        self.partner_id.commercial_partner_id.id,
+                    ),
                     ("state", "=", "valid"),
                     ("company_id", "=", self.company_id.id),
                 ],

@@ -1,6 +1,9 @@
 # Copyright 2017 Carlos Dauden - Tecnativa <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from unittest.mock import patch
+
+from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.contract.tests.test_contract import TestContractBase
 
 
@@ -8,14 +11,32 @@ class TestContractMandate(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.payment_method = cls.env["account.payment.method"].create(
-            {
-                "name": "Test SDD",
-                "code": "test_code_sdd",
-                "payment_type": "inbound",
-                "mandate_required": True,
-            }
+
+        Method_get_payment_method_information = (
+            AccountPaymentMethod._get_payment_method_information
         )
+
+        def _get_payment_method_information(self):
+            res = Method_get_payment_method_information(self)
+            res["test_code_sdd"] = {
+                "mode": "multi",
+                "domain": [("type", "=", "bank")],
+            }
+            return res
+
+        with patch.object(
+            AccountPaymentMethod,
+            "_get_payment_method_information",
+            _get_payment_method_information,
+        ):
+            cls.payment_method = cls.env["account.payment.method"].create(
+                {
+                    "name": "Test SDD",
+                    "code": "test_code_sdd",
+                    "payment_type": "inbound",
+                    "mandate_required": True,
+                }
+            )
         cls.payment_mode = cls.env["account.payment.mode"].create(
             {
                 "name": "Test payment mode",
